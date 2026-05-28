@@ -5,7 +5,9 @@ const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: '*', methods: ['GET', 'POST'] }
+  cors: { origin: '*', methods: ['GET', 'POST'] },
+  transports: ['websocket', 'polling'],
+  allowEIO3: true,
 });
 
 const users = new Map();
@@ -40,7 +42,6 @@ app.post('/send-notification', (req, res) => {
   }
 });
 
-// Health check endpoint
 app.get('/', (req, res) => {
   res.send('WebSocket server is running');
 });
