@@ -27,7 +27,9 @@ io.on('connection', (socket) => {
   });
 });
 
-app.post('/send-notification', express.json(), (req, res) => {
+app.use(express.json());
+
+app.post('/send-notification', (req, res) => {
   const { userId, type, title, message } = req.body;
   const socketId = users.get(Number(userId));
   if (socketId) {
@@ -36,6 +38,11 @@ app.post('/send-notification', express.json(), (req, res) => {
   } else {
     res.json({ success: false, message: 'User not connected' });
   }
+});
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.send('WebSocket server is running');
 });
 
 const PORT = process.env.PORT || 3001;
