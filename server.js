@@ -8,6 +8,7 @@ const io = new Server(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] },
   transports: ['websocket', 'polling'],
   allowEIO3: true,
+  path: '/socket.io',
 });
 
 const users = new Map();
@@ -30,6 +31,11 @@ io.on('connection', (socket) => {
 });
 
 app.use(express.json());
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', connections: users.size });
+});
 
 app.post('/send-notification', (req, res) => {
   const { userId, type, title, message } = req.body;
